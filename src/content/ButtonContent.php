@@ -23,7 +23,7 @@ class ButtonContent implements IMessageContent
      */
     protected $textContent;
     /**
-     * @var ImageContent
+     * @var ImageContent|null
      */
     protected $imageContent;
 
@@ -35,7 +35,7 @@ class ButtonContent implements IMessageContent
      * @param TextContent  $textContent
      * @param ImageContent $imageContent
      */
-    public function __construct(string $caption, string $action, TextContent $textContent, ImageContent $imageContent)
+    public function __construct(string $caption, string $action, TextContent $textContent, ?ImageContent $imageContent = null)
     {
         $this->caption = $caption;
         $this->action = $action;
@@ -48,12 +48,17 @@ class ButtonContent implements IMessageContent
      */
     public function jsonSerialize(): array
     {
-        return [
+        $data = [
             'caption' => $this->caption,
             'action' => $this->action,
             'text' => $this->textContent->getText(),
-            'imageUrl' => $this->imageContent->getImageUrl(),
         ];
+
+        if (null !== $this->imageContent) {
+            $data['imageUrl'] = $this->imageContent->getImageUrl();
+        }
+
+        return $data;
     }
 
     /**
