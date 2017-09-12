@@ -1,4 +1,7 @@
 # Devino Viber HTTP Client
+
+[![Build Status](https://travis-ci.org/superjobru/devino-viber.svg?branch=master)](https://travis-ci.org/superjobru/devino-viber)
+
 Простой клиент для работы с Devino Viber HTTP API.
  
 Документация по API: http://devino-documentation.readthedocs.io/viber-resender.html
