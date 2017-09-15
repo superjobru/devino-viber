@@ -87,7 +87,7 @@ class ResponseDecoder
     /**
      * @param ResponseInterface $response
      *
-     * @return StatusResponse[]
+     * @return StatusResponse[]|SmsStatesResponse[]
      * @throws BadResponseCodeException
      * @throws RuntimeException
      * @throws BadResponseFormatException

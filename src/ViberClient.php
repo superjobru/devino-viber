@@ -13,6 +13,7 @@ use superjob\devino\exception\BadStatusException;
 use superjob\devino\message\IRequest;
 use superjob\devino\message\SendRequest;
 use superjob\devino\message\SendResponse;
+use superjob\devino\message\SmsStatesResponse;
 use superjob\devino\message\StatusRequest;
 use superjob\devino\message\StatusResponse;
 
@@ -85,7 +86,7 @@ class ViberClient
     /**
      * @param int[] $messageIds
      *
-     * @return StatusResponse[]
+     * @return StatusResponse[]|SmsStatesResponse[]
      * @throws BadResponseCodeException
      * @throws BadStatusException
      * @throws BadResponseFormatException
