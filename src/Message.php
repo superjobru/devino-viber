@@ -74,6 +74,7 @@ class Message implements JsonSerializable
         ];
 
         if (null !== $this->sms) {
+            $content['resendSms'] = true;
             $content['sms'] = $this->sms;
         }
 
