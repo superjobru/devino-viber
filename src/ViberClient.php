@@ -67,7 +67,6 @@ class ViberClient
 
     /**
      * @param array $messages
-     * @param bool  $resendSms
      *
      * @return SendResponse[]
      * @throws InvalidArgumentException
@@ -76,9 +75,9 @@ class ViberClient
      * @throws BadStatusException
      * @throws BadResponseFormatException
      */
-    public function send(array $messages, bool $resendSms = false): array
+    public function send(array $messages): array
     {
-        $response = $this->makeRequest(self::ENDPOINT_SEND, new SendRequest($messages, $resendSms));
+        $response = $this->makeRequest(self::ENDPOINT_SEND, new SendRequest($messages));
 
         return $this->getResponseDecoder()->decodeSendResponse($response);
     }

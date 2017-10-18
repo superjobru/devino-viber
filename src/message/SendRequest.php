@@ -9,10 +9,6 @@ use superjob\devino\Message;
 class SendRequest implements IRequest
 {
     /**
-     * @var bool
-     */
-    protected $resendSms;
-    /**
      * @var Message[]
      */
     protected $messages;
@@ -20,14 +16,12 @@ class SendRequest implements IRequest
     /**
      * SendRequest constructor.
      *
-     * @param bool      $resendSms
      * @param Message[] $messages
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(array $messages, bool $resendSms = false)
+    public function __construct(array $messages)
     {
-        $this->resendSms = $resendSms;
         foreach ($messages as $message) {
             if (!$message instanceof Message) {
                 throw new InvalidArgumentException('Only type Message and its subtypes are permitted');
@@ -41,8 +35,15 @@ class SendRequest implements IRequest
      */
     public function jsonSerialize(): array
     {
+        $resendSms = false;
+        foreach ($this->messages as $message) {
+            if ($message->hasSms()) {
+                $resendSms = true;
+            }
+        }
+
         return [
-            'resendSms' => $this->resendSms,
+            'resendSms' => $resendSms,
             'messages' => $this->messages,
         ];
     }
