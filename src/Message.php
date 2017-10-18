@@ -74,8 +74,7 @@ class Message implements JsonSerializable
         ];
 
         if (null !== $this->sms) {
-            $content['resendSms'] = true;
-            $content['sms'] = $this->sms;
+            $content = array_merge($content, $this->sms->jsonSerialize());
         }
 
         return $content;
@@ -101,5 +100,10 @@ class Message implements JsonSerializable
     {
         $this->validityPeriodSec = $validityPeriodSec;
         return $this;
+    }
+
+    public function hasSms(): bool
+    {
+        return null !== $this->sms;
     }
 }
