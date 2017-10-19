@@ -107,7 +107,7 @@ class ResponseDecoder
                 if (isset($message['smsStates']) && is_array($message['smsStates'])) {
                     $smsStates = array_map(
                         function ($item) {
-                            return new SmsState($item['id'], $item['state']);
+                            return new SmsState($item['id'], $item['status']);
                         },
                         $message['smsStates']
                     );
