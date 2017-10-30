@@ -121,7 +121,7 @@ class ResponseDecoderTest extends TestCase
     {
         return [
             [
-                '{"status":"ok","messages":[{"providerId":"3158611117333282818","code":"ok","smsStates":[{"id":"583465579822710798","state":"delivered"}]},{"providerId":"3158611117333282819","code":"ok","status":"read","statusAt":"2016-08-10 15:28:50"}]}',
+                '{"status":"ok","messages":[{"providerId":"3158611117333282818","code":"ok","smsStates":[{"id":"583465579822710798","status":"delivered"}]},{"providerId":"3158611117333282819","code":"ok","status":"read","statusAt":"2016-08-10 15:28:50"}]}',
                 [
                     new SmsStatesResponse('ok', '3158611117333282818', [
                         new SmsState('583465579822710798', 'delivered')
@@ -130,7 +130,7 @@ class ResponseDecoderTest extends TestCase
                 ]
             ],
             [
-                '{"status":"ok","messages":[{"providerId":"3158611117333282816","code":"ok","smsStates":[{"id":"583465579822710784","state":"delivered"},{"id":"583465579822710785","state":"delivered"}]},{"providerId":"3158611117333282818","code":"ok","smsStates":[{"id":"583465579822710798","state":"delivered"}]},{"providerId":"3158611117333282819","code":"ok","status":"read","statusAt":"2016-08-10 15:28:50"}]}',
+                '{"status":"ok","messages":[{"providerId":"3158611117333282816","code":"ok","smsStates":[{"id":"583465579822710784","status":"delivered"},{"id":"583465579822710785","status":"delivered"}]},{"providerId":"3158611117333282818","code":"ok","smsStates":[{"id":"583465579822710798","status":"delivered"}]},{"providerId":"3158611117333282819","code":"ok","status":"read","statusAt":"2016-08-10 15:28:50"}]}',
                 [
                     new SmsStatesResponse('ok', '3158611117333282816', [
                         new SmsState('583465579822710784', 'delivered'),
