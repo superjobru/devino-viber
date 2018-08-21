@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace superjob\devino\tests;
 
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use superjob\devino\content\TextContent;
@@ -37,21 +37,20 @@ class ViberClientTest extends TestCase
      * @dataProvider providerTestSendRequest
      *
      * @param array $messages
-     * @param bool  $resendSms
      */
-    public function testSendRequest(array $messages, bool $resendSms)
+    public function testSendRequest(array $messages)
     {
         $this->client->expects(static::exactly(1))
                      ->method('makeRequest')
                      ->with(
                          'send',
-                         new SendRequest($messages, $resendSms)
+                         new SendRequest($messages)
                      )
                      ->willReturn(
                          $this->createMock(Response::class)
                      );
 
-        $this->client->send($messages, $resendSms);
+        $this->client->send($messages);
     }
 
     public function providerTestSendRequest(): array
@@ -59,7 +58,6 @@ class ViberClientTest extends TestCase
         return [
             [
                 [new Message('', '', '', new TextContent(''))],
-                false
             ]
         ];
     }

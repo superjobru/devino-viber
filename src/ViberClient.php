@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace superjob\devino;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Message\ResponseInterface;
+use GuzzleHttp\RequestOptions;
 use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use superjob\devino\exception\BadResponseCodeException;
 use superjob\devino\exception\BadResponseFormatException;
@@ -100,21 +101,22 @@ class ViberClient
     }
 
     /**
-     * @param string   $endpoint
+     * @param string $endpoint
      * @param IRequest $request
      *
-     * @return \GuzzleHttp\Message\FutureResponse|ResponseInterface|\GuzzleHttp\Ring\Future\FutureInterface|null
+     * @return ResponseInterface
      */
     protected function makeRequest(string $endpoint, IRequest $request)
     {
-        $clientRequest = $this->client->createRequest(
-            'POST',
-            self::URL . $endpoint,
-            ['json' => $request]
-        );
-        $clientRequest->setHeader('Authorization', $this->getAuthHeader());
+        $url = self::URL . $endpoint;
+        $options = [
+            RequestOptions::JSON => $request,
+            RequestOptions::HEADERS => [
+                'Authorization' => $this->getAuthHeader()
+            ]
+        ];
 
-        return $this->client->send($clientRequest);
+        return $this->client->request('POST', $url, $options);
     }
 
     protected function getResponseDecoder(): ResponseDecoder
