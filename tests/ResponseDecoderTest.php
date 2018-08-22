@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace superjob\devino\tests;
 
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use superjob\devino\exception\BadResponseCodeException;
@@ -14,6 +14,7 @@ use superjob\devino\message\SmsState;
 use superjob\devino\message\SmsStatesResponse;
 use superjob\devino\message\StatusResponse;
 use superjob\devino\ResponseDecoder;
+use function GuzzleHttp\json_encode;
 
 class ResponseDecoderTest extends TestCase
 {

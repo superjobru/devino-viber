@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace superjob\devino;
 
-use GuzzleHttp\Exception\ParseException;
-use GuzzleHttp\Message\ResponseInterface;
+use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use superjob\devino\exception\BadResponseCodeException;
 use superjob\devino\exception\BadResponseFormatException;
@@ -13,6 +13,7 @@ use superjob\devino\message\SendResponse;
 use superjob\devino\message\SmsState;
 use superjob\devino\message\SmsStatesResponse;
 use superjob\devino\message\StatusResponse;
+use function GuzzleHttp\json_decode;
 
 class ResponseDecoder
 {
@@ -35,8 +36,8 @@ class ResponseDecoder
         }
 
         try {
-            $content = $response->json();
-        } catch (ParseException $e) {
+            $content = json_decode((string) $response->getBody(), true);
+        } catch (InvalidArgumentException $e) {
             throw new BadResponseFormatException($response);
         }
 

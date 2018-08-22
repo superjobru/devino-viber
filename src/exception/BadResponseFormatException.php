@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace superjob\devino\exception;
 
 use Exception;
-use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class BadResponseFormatException extends Exception
 {
