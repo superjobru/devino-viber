@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace superjob\devino;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
@@ -38,10 +39,7 @@ class ViberClient
      * @var string
      */
     protected $password;
-    /**
-     * @var bool
-     */
-    protected $authenticated = false;
+
     /**
      * @var ResponseDecoder
      */
@@ -63,7 +61,7 @@ class ViberClient
 
     protected function getAuthHeader(): string
     {
-        return 'Basic ' . base64_encode("{$this->login}:{$this->password}");
+        return 'Basic ' . base64_encode("$this->login:$this->password");
     }
 
     /**
@@ -74,7 +72,7 @@ class ViberClient
      * @throws BadResponseCodeException
      * @throws RuntimeException
      * @throws BadStatusException
-     * @throws BadResponseFormatException
+     * @throws BadResponseFormatException|GuzzleException
      */
     public function send(array $messages): array
     {
@@ -91,7 +89,7 @@ class ViberClient
      * @throws BadStatusException
      * @throws BadResponseFormatException
      * @throws RuntimeException
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException|GuzzleException
      */
     public function status(array $messageIds): array
     {
@@ -105,8 +103,9 @@ class ViberClient
      * @param IRequest $request
      *
      * @return ResponseInterface
+     * @throws GuzzleException
      */
-    protected function makeRequest(string $endpoint, IRequest $request)
+    protected function makeRequest(string $endpoint, IRequest $request): ResponseInterface
     {
         $url = self::URL . $endpoint;
         $options = [

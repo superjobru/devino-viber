@@ -19,7 +19,7 @@ class StatusRequest implements IRequest
      *
      * @param string[] $messageIds
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(array $messageIds)
     {
