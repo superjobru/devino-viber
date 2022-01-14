@@ -17,7 +17,7 @@ class SmsStatesResponse extends BaseResponse
      * @param string $providerId
      * @param array  $smsStates
      */
-    public function __construct(string $code, $providerId, array $smsStates)
+    public function __construct(string $code, string $providerId, array $smsStates)
     {
         parent::__construct($code, $providerId);
         $this->smsStates = $smsStates;

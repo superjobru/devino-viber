@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace superjob\devino\tests;
 
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Utils;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
+use Psr\Http\Message\StreamInterface;
 use superjob\devino\exception\BadResponseCodeException;
 use superjob\devino\exception\BadResponseFormatException;
 use superjob\devino\exception\BadStatusException;
@@ -14,7 +16,6 @@ use superjob\devino\message\SmsState;
 use superjob\devino\message\SmsStatesResponse;
 use superjob\devino\message\StatusResponse;
 use superjob\devino\ResponseDecoder;
-use function GuzzleHttp\json_encode;
 
 class ResponseDecoderTest extends TestCase
 {
@@ -23,11 +24,11 @@ class ResponseDecoderTest extends TestCase
      */
     private $responseDecoder;
     /**
-     * @var Response|PHPUnit_Framework_MockObject_MockObject
+     * @var Response|MockObject
      */
     private $response;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->responseDecoder = new ResponseDecoder();
@@ -37,17 +38,92 @@ class ResponseDecoderTest extends TestCase
                                ->getMock();
     }
 
+    private function getStreamInterfaceMock(string $responseText): StreamInterface
+    {
+        return new class($responseText) implements StreamInterface {
+            private $a;
+            public function __construct($a)
+            {
+                $this->a = $a;
+            }
+            public function __toString()
+            {
+                return (string) $this->a;
+            }
+
+            public function close()
+            {
+            }
+
+            public function detach()
+            {
+            }
+
+            public function getSize()
+            {
+            }
+
+            public function tell()
+            {
+            }
+
+            public function eof()
+            {
+            }
+
+            public function isSeekable()
+            {
+            }
+
+            public function seek($offset, $whence = SEEK_SET)
+            {
+            }
+
+            public function rewind()
+            {
+            }
+
+            public function isWritable()
+            {
+            }
+
+            public function write($string)
+            {
+            }
+
+            public function isReadable()
+            {
+            }
+
+            public function read($length)
+            {
+            }
+
+            public function getContents()
+            {
+            }
+
+            public function getMetadata($key = null)
+            {
+            }
+        };
+    }
+
     /**
      * @dataProvider providerTestFailDecodeResponse
      *
      * @param string $responseText
-     * @param int    $statusCode
+     * @param int $statusCode
      * @param string $exception
+     *
+     * @throws BadResponseCodeException
+     * @throws BadResponseFormatException
+     * @throws BadStatusException
      */
     public function testFailDecodeResponse(string $responseText, int $statusCode, string $exception): void
     {
         $this->expectException($exception);
-        $this->response->method('getBody')->willReturn($responseText);
+        $this->response->method('getBody')->willReturn($this->getStreamInterfaceMock($responseText));
         $this->response->method('getStatusCode')->willReturn($statusCode);
         $this->responseDecoder->decodeSendResponse($this->response);
     }
@@ -57,8 +133,8 @@ class ResponseDecoderTest extends TestCase
         return [
             ['', 400, BadResponseCodeException::class],
             ['', 200, BadResponseFormatException::class],
-            [json_encode(['status' => 'error']), 200, BadStatusException::class],
-            [json_encode(['status' => 'ok']), 200, BadResponseFormatException::class],
+            [Utils::jsonEncode(['status' => 'error']), 200, BadStatusException::class],
+            [Utils::jsonEncode(['status' => 'ok']), 200, BadResponseFormatException::class],
             [
                 '{"status":"ok","messages":[{"providerId":54321}]}',
                 200,
@@ -76,11 +152,15 @@ class ResponseDecoderTest extends TestCase
      * @dataProvider providerTestSuccessDecodeSendResponse
      *
      * @param string $responseText
-     * @param array  $expected
+     * @param array $expected
+     *
+     * @throws BadResponseCodeException
+     * @throws BadResponseFormatException
+     * @throws BadStatusException
      */
     public function testSuccessDecodeSendResponse(string $responseText, array $expected): void
     {
-        $this->response->method('getBody')->willReturn($responseText);
+        $this->response->method('getBody')->willReturn($this->getStreamInterfaceMock($responseText));
         $this->response->method('getStatusCode')->willReturn(200);
         static::assertEquals(
             $expected,
@@ -91,7 +171,7 @@ class ResponseDecoderTest extends TestCase
     public function providerTestSuccessDecodeSendResponse(): array
     {
         return [
-            [json_encode(['status' => 'ok', 'messages' => []]), []],
+            [Utils::jsonEncode(['status' => 'ok', 'messages' => []]), []],
 
             [
                 '{"status":"ok","messages":[{"providerId":54321,"code":"ok"}]}',
@@ -106,11 +186,15 @@ class ResponseDecoderTest extends TestCase
      * @dataProvider providerTestSuccessDecodeStatusResponse
      *
      * @param string $responseText
-     * @param array  $expected
+     * @param array $expected
+     *
+     * @throws BadResponseCodeException
+     * @throws BadResponseFormatException
+     * @throws BadStatusException
      */
     public function testSuccessDecodeStatusResponse(string $responseText, array $expected): void
     {
-        $this->response->method('getBody')->willReturn($responseText);
+        $this->response->method('getBody')->willReturn($this->getStreamInterfaceMock($responseText));
         $this->response->method('getStatusCode')->willReturn(200);
         static::assertEquals(
             $expected,

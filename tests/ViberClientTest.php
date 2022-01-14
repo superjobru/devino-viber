@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace superjob\devino\tests;
 
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use superjob\devino\content\TextContent;
 use superjob\devino\Message;
 use superjob\devino\message\SendRequest;
@@ -15,11 +15,11 @@ use superjob\devino\ViberClient;
 class ViberClientTest extends TestCase
 {
     /**
-     * @var ViberClient|PHPUnit_Framework_MockObject_MockObject
+     * @var ViberClient|MockObject
      */
     private $client;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,10 +37,14 @@ class ViberClientTest extends TestCase
      * @dataProvider providerTestSendRequest
      *
      * @param array $messages
+     *
+     * @throws \superjob\devino\exception\BadResponseCodeException
+     * @throws \superjob\devino\exception\BadResponseFormatException
+     * @throws \superjob\devino\exception\BadStatusException
      */
     public function testSendRequest(array $messages)
     {
-        $this->client->expects(static::exactly(1))
+        $this->client->expects(static::once())
                      ->method('makeRequest')
                      ->with(
                          'send',

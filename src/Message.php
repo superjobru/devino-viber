@@ -85,7 +85,7 @@ class Message implements JsonSerializable
      *
      * @return $this
      */
-    public function setPriority(string $priority)
+    public function setPriority(string $priority): self
     {
         $this->priority = $priority;
         return $this;
@@ -96,7 +96,7 @@ class Message implements JsonSerializable
      *
      * @return $this
      */
-    public function setValidityPeriodSec(int $validityPeriodSec)
+    public function setValidityPeriodSec(int $validityPeriodSec): self
     {
         $this->validityPeriodSec = $validityPeriodSec;
         return $this;

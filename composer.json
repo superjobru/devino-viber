@@ -3,18 +3,13 @@
     "description": "Devino Viber HTTP Client",
     "type": "library",
     "require": {
-        "php": ">=7.1",
-        "guzzlehttp/guzzle": "^6.3"
+        "php"               : ">=7.1 || ^8",
+        "guzzlehttp/guzzle" : "^6.3 || ^7",
+        "ext-json"          : "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.2"
+        "phpunit/phpunit": "^9"
     },
-    "authors": [
-        {
-            "name": "Alex Kvak",
-            "email": "a.kvak@superjob.ru"
-        }
-    ],
     "autoload": {
         "psr-4" : {
             "superjob\\devino\\" : "src/",

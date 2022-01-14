@@ -49,7 +49,7 @@ class SmsContent implements JsonSerializable
      *
      * @return $this
      */
-    public function setValidityPeriodSec(int $validityPeriodSec)
+    public function setValidityPeriodSec(int $validityPeriodSec): self
     {
         $this->validityPeriodSec = $validityPeriodSec;
         return $this;

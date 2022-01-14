@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace superjob\devino;
 
+use GuzzleHttp\Utils;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
@@ -13,7 +14,6 @@ use superjob\devino\message\SendResponse;
 use superjob\devino\message\SmsState;
 use superjob\devino\message\SmsStatesResponse;
 use superjob\devino\message\StatusResponse;
-use function GuzzleHttp\json_decode;
 
 class ResponseDecoder
 {
@@ -31,12 +31,12 @@ class ResponseDecoder
      */
     protected function decodeResponse(ResponseInterface $response): array
     {
-        if (static::CODE_OK !== (int) $response->getStatusCode()) {
+        if (static::CODE_OK !== $response->getStatusCode()) {
             throw new BadResponseCodeException($response);
         }
 
         try {
-            $content = json_decode((string) $response->getBody(), true);
+            $content = Utils::jsonDecode((string) $response->getBody(), true);
         } catch (InvalidArgumentException $e) {
             throw new BadResponseFormatException($response);
         }
@@ -78,6 +78,13 @@ class ResponseDecoder
         );
     }
 
+    /**
+     * @param ResponseInterface $response
+     * @param array $message
+     *
+     * @return void
+     * @throws BadResponseFormatException
+     */
     protected function checkResponseMessage(ResponseInterface $response, array $message): void
     {
         if (!isset($message['code'], $message['providerId'])) {
@@ -107,7 +114,7 @@ class ResponseDecoder
 
                 if (isset($message['smsStates']) && is_array($message['smsStates'])) {
                     $smsStates = array_map(
-                        function ($item) {
+                        static function ($item) {
                             return new SmsState($item['id'], $item['status']);
                         },
                         $message['smsStates']

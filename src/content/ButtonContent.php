@@ -14,10 +14,7 @@ class ButtonContent implements IMessageContent
      * @var string
      */
     protected $action;
-    /**
-     * @var string
-     */
-    protected $imageUrl;
+
     /**
      * @var TextContent
      */
@@ -30,10 +27,10 @@ class ButtonContent implements IMessageContent
     /**
      * ImageTextContent constructor.
      *
-     * @param string       $caption
-     * @param string       $action
-     * @param TextContent  $textContent
-     * @param ImageContent $imageContent
+     * @param string $caption
+     * @param string $action
+     * @param TextContent $textContent
+     * @param ImageContent|null $imageContent
      */
     public function __construct(string $caption, string $action, TextContent $textContent, ?ImageContent $imageContent = null)
     {
